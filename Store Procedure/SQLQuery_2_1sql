@@ -1,0 +1,41 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- Create the stored procedure in the specified schema
+ALTER PROCEDURE [dbo].[GetClientes]
+
+    -- PARAMETROS DEFAULTS
+	@tipoRegistro				VARCHAR(50),
+	@page						INT,
+	@start						INT,
+	@limit						INT,
+	@property					VARCHAR(200),
+	@direction					CHAR(4),
+    @BRFC                       INT,
+    @Id INT,
+    @nombre VARCHAR(50),
+    @rfc VARCHAR(25), 
+    @direccion VARCHAR(150),
+    @pais VARCHAR(30),
+    @credito INT,
+    @fecha DATETIME,
+    @tipo_persona VARCHAR(10),
+    @sucursal VARCHAR(10)
+-- add more stored procedure parameters here
+AS
+BEGIN
+    -- body of the stored procedure
+    SELECT c.nombre, c.rfc, c.direccion, c.credito, COUNT(c.Id) OVER() AS NUMREGISTROS
+    FROM dbo.clientes c
+    WHERE c.nombre LIKE '%' + @nombre + '%' OR
+    c.rfc LIKE '%' + @rfc + '%' OR
+    c.direccion LIKE '%' + @direccion + '%' OR
+    c.tipo_persona = @tipo_persona
+    ORDER BY c.nombre ASC
+END
+
+-- example to execute the stored procedure we just created
+EXECUTE dbo.GetClientes 1, 2, 3, 4, 5, 6, 7 , 8, 9, 10, 11, 12, 13, 14, 15, 16
+
+GO

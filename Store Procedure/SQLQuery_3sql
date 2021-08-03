@@ -1,0 +1,64 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- Create the stored procedure in the specified schema
+ALTER PROCEDURE [dbo].[SaveClientes]
+
+    -- PARAMETROS DEFAULTS
+    @str_json	                VARCHAR(MAX),
+    @msg                        VARCHAR(100),
+    @Id                         INT,
+    @nombre                     VARCHAR(50),
+    @rfc                        VARCHAR(25), 
+    @direccion                  VARCHAR(50),
+    @pais                       VARCHAR(30),
+    @credito                    INT,
+    @fecha                      DATETIME,
+    @tipo_persona               INT,
+    @sucursal                   VARCHAR(10)
+    -- add more stored procedure parameters here
+
+AS
+BEGIN
+
+    SET NOCOUNT ON;
+
+    Begin Tran GuardarCliente
+
+    Begin Try
+
+    -- body of the stored procedure
+    INSERT INTO dbo.clientes(
+        nombre,
+        rfc,
+        direccion,
+        pais,
+        credito,
+        tipo_persona,
+        sucursal
+    )VALUES(
+        @nombre,
+        @rfc,
+        @direccion,
+        @pais,
+        @credito,
+        @tipo_persona,
+        @sucursal
+    )
+
+        SET @msg = 'El Usuario se registro correctamente.'
+
+        COMMIT TRAN GuardarCliente
+
+    End try
+    Begin Catch
+
+        SET @msg = 'Ocurrio un Error: ' + ERROR_MESSAGE() + ' en la línea ' + CONVERT(NVARCHAR(255), ERROR_LINE() ) + '.'
+        Rollback TRAN GuardarCliente
+
+    End Catch
+
+END
+
+GO
